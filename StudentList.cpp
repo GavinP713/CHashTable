@@ -12,6 +12,23 @@ struct Student {
   float gpa;
 };
 
+// returns index in students array
+int find(vector<Student*> &students, int id) {
+  // check list for student of id
+  for (int i = 0; i < students.size(); i++) {
+    Student* student = students[i];
+
+    // return the student if it matches the id
+    if (student -> id == id) {
+      return i;
+    }
+  }
+  
+  // if the student wasnt found, throw error
+  cout << "student of id " << id << " could not be found!" << endl;
+  return -1;
+}
+
 void addStudent(vector<Student*> &students, char input[cssize]) {
   Student* student = new Student();
   
@@ -30,20 +47,59 @@ void addStudent(vector<Student*> &students, char input[cssize]) {
 }
 
 void removeStudent(vector<Student*> &students, char input[cssize]) {
-  cin >> input;
-  int targetid = atoi(input);
+  // prompt user for id of student to remove
+  cout << "id: "; cin >> input;
 
-  for (int i = 0; i < students.size(); i++) {
-    Student* student = students[i];
-    
-    if (student -> id == targetid) {
-      cout << "removing student" << endl;
-      students.erase(students.begin() + i);
-      return;
-    }
+  // convert to number
+  int id = atoi(input);
+
+  // find the student
+  int index = find(students, id);
+  
+  // remove the student associated with id
+  if (index != -1) {
+    students.erase(students.begin() + index);
+    cout << "removing student" << endl;
+  }
+}
+
+// print info of one student
+void printStudent(vector<Student*> &students, int id) {
+  int _id = id;
+
+  // entering id of 0 prompts user to enter the id
+  if (id == 0) {
+    // prompt for id
+    char input[cssize];
+    cout << "id: "; cin >> input;
+
+    // override id to new
+    _id = atoi(input);
   }
 
-  cout << "student of id " << targetid << " could not be found!" << endl;
+  // print the student
+  Student* student = students[find(students, _id)];
+  cout << "id: " << student -> id << endl;
+  cout << "- firstname: " << student -> firstname << endl;
+  cout << "- lastname: " << student -> lastname << endl;
+  cout << "- gpa: " << student -> gpa << endl;
+}
+
+// print all students
+void printStudents(vector<Student*> &students) {
+  for (int i = 0; i < students.size(); i++) {
+    Student* student = students[i];
+    printStudent(students, student -> id);
+  }
+}
+
+void help() {
+  cout << "\"add\": register a student into the system" << endl;
+  cout << "\"remove\": remove a student from the system" << endl;
+  cout << "\"print\": print info of a registered student" << endl;
+  cout << "\"printall\": display list of registered students" << endl;
+  cout << "\"quit\": exit the program" << endl;
+  cout << "\"help\": display a list of commands" << endl;
 }
 
 int main() {
@@ -63,13 +119,18 @@ int main() {
       removeStudent(students, input);
     }
     else if (strcmp(input, "print") == 0) {
-
+      // 0 for id uses user prompt instead
+      printStudent(students, 0);
     }
-    else if (input == "help") {
-
+    else if (strcmp(input, "printall") == 0) {
+      printStudents(students);
     }
-    else if (input == "quit") {
-
+    else if (strcmp(input, "help") == 0) {
+      help();
+    }
+    else if (strcmp(input, "quit") == 0) {
+      cout << "quitting loop" << endl;
+      break;
     }
   }
   
