@@ -132,7 +132,11 @@ int main() {
       cout << "end program" << endl;
       return 0;
     }
+    else {
+      cout << "unkown command" << endl;
+    }
   }
-  
+
+  cout << "loop ended" << endl;
   return 0;
 }
