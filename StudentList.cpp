@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <cstring>
 #include <vector>
 using namespace std;
@@ -36,9 +37,9 @@ void addStudent(vector<Student*> &students, char input[cssize]) {
 
   // prompt user and add in data
   cout << "first name: "; cin >> input; strcpy(student-> firstname, input);
-  cout << "last name: "; cin >> input; strcpy(student-> lastname, input);
-  cout << "id: "; cin >> input; student-> id = atoi(input);
-  cout << "gpa: "; cin >> input; student-> gpa = atof(input);
+  cout << "last name: ";  cin >> input; strcpy(student-> lastname, input);
+  cout << "id: ";         cin >> input; student-> id = atoi(input);
+  cout << "gpa: ";        cin >> input; student-> gpa = atof(input);
 
   cout << "student added" << endl;
   
@@ -64,11 +65,11 @@ void removeStudent(vector<Student*> &students, char input[cssize]) {
 }
 
 // print info of one student
-void printStudent(vector<Student*> &students, int id) {
+void printStudent(vector<Student*> &students, int id, bool userset) {
   int _id = id;
 
-  // entering id of 0 prompts user to enter the id
-  if (id == 0) {
+  // user inputed id overrides reference
+  if (userset == true) {
     // prompt for id
     char input[cssize];
     cout << "id: "; cin >> input;
@@ -79,17 +80,17 @@ void printStudent(vector<Student*> &students, int id) {
 
   // print the student
   Student* student = students[find(students, _id)];
-  cout << "id: " << student -> id << endl;
+  cout << "id: "          << student -> id << endl;
   cout << "- firstname: " << student -> firstname << endl;
-  cout << "- lastname: " << student -> lastname << endl;
-  cout << "- gpa: " << student -> gpa << endl;
+  cout << "- lastname: "  << student -> lastname << endl;
+  cout << "- gpa: "       << setprecision(2) << fixed << student -> gpa << endl;
 }
 
 // print all students
-void printStudents(vector<Student*> &students) {
+void printAll(vector<Student*> &students) {
   for (int i = 0; i < students.size(); i++) {
     Student* student = students[i];
-    printStudent(students, student -> id);
+    printStudent(students, student -> id, false);
   }
 }
 
@@ -119,18 +120,17 @@ int main() {
       removeStudent(students, input);
     }
     else if (strcmp(input, "print") == 0) {
-      // 0 for id uses user prompt instead
-      printStudent(students, 0);
+      printStudent(students, 0, true);
     }
     else if (strcmp(input, "printall") == 0) {
-      printStudents(students);
+      printAll(students);
     }
     else if (strcmp(input, "help") == 0) {
       help();
     }
     else if (strcmp(input, "quit") == 0) {
-      cout << "quitting loop" << endl;
-      break;
+      cout << "end program" << endl;
+      return 0;
     }
   }
   
