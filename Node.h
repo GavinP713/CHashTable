@@ -7,7 +7,9 @@ class Node {
 public:
   Student* student;
   Node* next;
-  Node(Student* student);
+  Node* last();
+  int length();
+  Node(Student* _student);
 };
 
 #endif
