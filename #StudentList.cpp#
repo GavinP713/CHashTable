@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cstring>
 #include <vector>
+#include "HashTable.h"
 using namespace std;
 
 const int cssize = 128;

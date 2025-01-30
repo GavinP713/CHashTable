@@ -2,8 +2,9 @@
 #include <iostream>
 using namespace std;
 
-HashTable::HashTable(int size) {
-  table = new Node*[size];
+HashTable::HashTable(int _length) {
+  table = new Node*[-length];
+  length = _length;
 }
 
 void HashTable::insert(Student* student) {
@@ -13,14 +14,18 @@ void HashTable::insert(Student* student) {
   Node* node = table[hashID];
 
   // space in list
-  if (getLength(hashID) < 4) {
-    Node* node = getNode(hashID);
-    node = new Node(student);
+  if (linkLength(hashID) < 4) {
+    Node* node = getNode(hashID); // gets last node in list
+    node = new Node(student); 
   }
   // capacity exceeded, create new hashtable
   else {
-    Node** newTable = new Node*[size()*2];
-    newTable
+    Node** oldTable = table;
+    Node** newTable = new Node*[length*2];
+    table = newTable;
+    length = length*2;
+    
+    copy(oldTable, length/2);
   }
 }
 
@@ -36,14 +41,14 @@ int HashTable::hashFunction(Student* student) {
   return student->id % size();
 }
 
-void HashTable::copy(Node** copyTable) {
+void HashTable::copy(Node** _table, int _length) {
   // loop through the table we're copying from
-  // calculate new position
-  for (int i = 0; i < copyList->size(); i++) {
-    if (copyTable[i] == NULL) continue;
-
-    Student* student = copyTable[i]->student;
-    table[hashFunction(student)] = student;
+  // calculate new position for students
+  for (int i = 0; i < _length; i++) {
+    if (_table[i] != NULL) {
+      Student* _student = _table[i]->student;
+      table[hashFunction(_student)]->student = _student;
+    }
   }
 }
 
@@ -61,7 +66,7 @@ Node* HashTable::getNode(int hashID) {
   return node;
 }
 
-int HashTable::getLength(int hashID) {
+int HashTable::linkLength(int hashID) {
   Node* node = table[hashID];
   int length = 0;
   
