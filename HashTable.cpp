@@ -29,12 +29,44 @@ void HashTable::insert(Student* student) {
   }
 }
 
-void HashTable::remove() {
-  
+void HashTable::remove(Node* node) {
+  for (int i = 0; i < length; i++) {
+    Node* current = table[i];
+    if (current == NULL) continue;
+    else if (current == node) {
+      table[i] = current->next;
+      delete(node);
+      return;
+    }
+   
+    while (current->next != node || current->next != NULL) {
+      current = current->next;
+    }
+    
+    if (current->next == node) {
+      current->next = current->next->next;
+      delete(node);
+      return;
+    }
+  }
 }
 
-void HashTable::search() {
-  
+Node* HashTable::search(int id) {
+  // search table
+  for (int i = 0; i < length; i++) {
+    Node* node = table[i];
+    
+    // get each node in linked list until either a NULL node is found or the student we're looking for
+    while (node->student->id != id || node != NULL) {
+      node = node->next;
+    }
+    
+    // list did or didnt contain the student
+    if (node->student->id == id) return node;
+    else return NULL;
+  }
+
+  return NULL;
 }
 
 int HashTable::hashFunction(Student* student) {
@@ -51,9 +83,15 @@ void HashTable::copy(Node** _table, int _length) {
     }
   }
 }
-
+ 
 int HashTable::size() {
-  return sizeof(HashTable::table) / sizeof(HashTable::table[0]);
+  int size = 0;
+  
+  for (int i = 0; i < length; i++) {
+    size += linkLength(i);
+  }
+       
+  return size;
 }
 
 Node* HashTable::getNode(int hashID) {

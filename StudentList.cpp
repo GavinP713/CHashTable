@@ -2,52 +2,29 @@
 #include <iomanip>
 #include <cstring>
 #include <vector>
+#include "HashTable.h"
 using namespace std;
 
 const int cssize = 128;
 
-struct Student {
-  char firstname[cssize];
-  char lastname[cssize];
-  int id;
-  float gpa;
-};
-
-// returns index in students array
-int find(vector<Student*> &students, int id) {
-  // check list for student of id
-  for (int i = 0; i < students.size(); i++) {
-    Student* student = students[i];
-
-    // return the student if it matches the id
-    if (student -> id == id) {
-      return i;
-    }
-  }
-  
-  // if the student wasnt found, throw error
-  cout << "student of id " << id << " could not be found!" << endl;
-  return -1;
-}
-
-void addStudent(vector<Student*> &students, char input[cssize]) {
+void addStudent(HashTable &table, char input[cssize]) {
   Student* student = new Student();
   
   cout << "enter student details" << endl;
 
   // prompt user and add in data
-  cout << "first name: "; cin >> input; strcpy(student-> firstname, input);
-  cout << "last name: ";  cin >> input; strcpy(student-> lastname, input);
-  cout << "id: ";         cin >> input; student-> id = atoi(input);
-  cout << "gpa: ";        cin >> input; student-> gpa = atof(input);
+  cout << "first name: "; cin >> input; strcpy(student->firstname, input);
+  cout << "last name: ";  cin >> input; strcpy(student->lastname, input);
+  cout << "id: ";         cin >> input; student->id = atoi(input);
+  cout << "gpa: ";        cin >> input; student->gpa = atof(input);
 
   cout << "student added" << endl;
   
   // assign to vector
-  students.push_back(student);
+  table.insert(student);
 }
 
-void removeStudent(vector<Student*> &students, char input[cssize]) {
+void removeStudent(HashTable &table, char input[cssize]) {
   // prompt user for id of student to remove
   cout << "id: "; cin >> input;
 
@@ -55,17 +32,21 @@ void removeStudent(vector<Student*> &students, char input[cssize]) {
   int id = atoi(input);
 
   // find the student
-  int index = find(students, id);
+  Node* node = table.search(id);
   
   // remove the student associated with id
-  if (index != -1) {
+  if (node->student != NULL) {
     students.erase(students.begin() + index);
     cout << "removing student" << endl;
+    table.remove(node);
+  }
+  else {
+    cout << "student not found!" << endl;
   }
 }
 
 // print info of one student
-void printStudent(vector<Student*> &students, int id, bool userset) {
+void printStudent(HashTable &table, int id, bool userset) {
   int _id = id;
 
   // user inputed id overrides reference
@@ -79,7 +60,7 @@ void printStudent(vector<Student*> &students, int id, bool userset) {
   }
 
   // print the student
-  Student* student = students[find(students, _id)];
+  Student* student = table.search(id);
   cout << "id: "          << student -> id << endl;
   cout << "- firstname: " << student -> firstname << endl;
   cout << "- lastname: "  << student -> lastname << endl;
@@ -87,8 +68,9 @@ void printStudent(vector<Student*> &students, int id, bool userset) {
 }
 
 // print all students
-void printAll(vector<Student*> &students) {
-  for (int i = 0; i < students.size(); i++) {
+void printAll(HashTable* &table) {
+  for (int i = 0; i < table->length; i++) {
+    
     Student* student = students[i];
     printStudent(students, student -> id, false);
   }
@@ -104,7 +86,7 @@ void help() {
 }
 
 int main() {
-  vector<Student*> students;
+  HashTable students = new HashTable(100);
 
   // program controls
   char input[cssize];
