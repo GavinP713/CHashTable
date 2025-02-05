@@ -13,7 +13,7 @@ class HashTable {
   void remove(Node* node);
   // returns node containing student
   // or NULL if student isnt in table
-  Node* search(int id);
+  Node* search(int _id);
   int hashFunction(Student* student);
 
   void copy(Node** _table, int _length);

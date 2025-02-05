@@ -10,10 +10,10 @@ HashTable::HashTable(int _length) {
 void HashTable::insert(Student* student) {
   int hashID = hashFunction(student);
 
-  // get final node in list
+  // get final node in linked list
   Node* node = table[hashID];
 
-  // space in list
+  // there is space in linked list
   if (linkLength(hashID) < 4) {
     Node* node = getNode(hashID); // gets last node in list
     node = new Node(student); 
@@ -51,18 +51,19 @@ void HashTable::remove(Node* node) {
   }
 }
 
-Node* HashTable::search(int id) {
+Node* HashTable::search(int _id) {
   // search table
   for (int i = 0; i < length; i++) {
     Node* node = table[i];
     
     // get each node in linked list until either a NULL node is found or the student we're looking for
-    while (node->student->id != id || node != NULL) {
+    while (node != NULL && node->student->id != _id) {
+      //if (node == NULL) break;
       node = node->next;
     }
-    
+
     // list did or didnt contain the student
-    if (node->student->id == id) return node;
+    if (node != NULL && node->student->id == _id) return node;
     else return NULL;
   }
 
@@ -70,7 +71,7 @@ Node* HashTable::search(int id) {
 }
 
 int HashTable::hashFunction(Student* student) {
-  return student->id % size();
+  return student->id % length;
 }
 
 void HashTable::copy(Node** _table, int _length) {

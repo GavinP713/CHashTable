@@ -56,11 +56,14 @@ void addStudent(HashTable* &table, char input[cssize]) {
   // prompt user and add in data
   cout << "first name: "; cin >> input; strcpy(student->firstname, input);
   cout << "last name: ";  cin >> input; strcpy(student->lastname, input);
-  cout << "id: ";         cin >> input; student->id = atoi(input);
-  cout << "gpa: ";        cin >> input; student->gpa = atof(input);
+  cout << "id: ";         cin >> student->id;
+  //student->id = atoi(input);
+  cout << "gpa: ";        cin >> student->gpa;
+  //student->gpa = atof(input);
   
   // insert to hash table
   table->insert(student);
+  
   
   cout << "student added" << endl;
 }
@@ -76,7 +79,7 @@ void removeStudent(HashTable* &table, char input[cssize]) {
   Node* node = table->search(id);
   
   // remove the student associated with id
-  if (node->student != NULL) {
+  if (node != NULL && node->student != NULL) {
     //students.erase(students.begin() + index);
     table->remove(node);
     cout << "student removed" << endl;
@@ -99,14 +102,22 @@ void printStudent(HashTable* &table, int id, bool userset) {
     // override id to new
     _id = atoi(input);
   }
-  
-  // print the student
-  Node* node = table->search(id);
-  Student* student = node->student;
-  cout << "id: "          << student -> id << endl;
-  cout << "- firstname: " << student -> firstname << endl;
-  cout << "- lastname: "  << student -> lastname << endl;
-  cout << "- gpa: "       << setprecision(2) << fixed << student -> gpa << endl;
+
+  cout << "DEBUG: " << _id << endl;
+  // get the student
+  Node* node = table->search(_id);
+
+  // print info
+  if (node != NULL) {
+    Student* student = node->student;
+    cout << "id: "          << student -> id << endl;
+    cout << "- firstname: " << student -> firstname << endl;
+    cout << "- lastname: "  << student -> lastname << endl;
+    cout << "- gpa: "       << setprecision(2) << fixed << student -> gpa << endl;
+  }
+  else {
+    cout << "printStudent() error" << endl;
+  }
 }
 
 void help() {
