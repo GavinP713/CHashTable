@@ -21,9 +21,6 @@ class HashTable {
   // how many nodes are in the table
   int size();
 
-  // move this to Node.h, not appropriate for this class
-  // gets final node in linked list
-  Node* getNode(int hashID);
   int linkLength(int hashID);
   HashTable(int size);
 };

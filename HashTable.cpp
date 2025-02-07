@@ -3,20 +3,26 @@
 using namespace std;
 
 HashTable::HashTable(int _length) {
-  table = new Node*[-length];
+  table = new Node*[_length];
   length = _length;
 }
 
 void HashTable::insert(Student* student) {
   int hashID = hashFunction(student);
 
-  // get final node in linked list
-  Node* node = table[hashID];
-
-  // there is space in linked list
+  // space in table
   if (linkLength(hashID) < 4) {
-    Node* node = getNode(hashID); // gets last node in list
-    node = new Node(student); 
+    // loop nodes until an empty node is found
+    Node* current = table[hashID];
+    while (true) {
+      if (current == NULL) {
+	table[hashID] = new Node(student);
+	return;
+      }
+      else {
+	current = current->next;
+      }
+    }
   }
   // capacity exceeded, create new hashtable
   else {
@@ -52,19 +58,21 @@ void HashTable::remove(Node* node) {
 }
 
 Node* HashTable::search(int _id) {
+  cout << "search(id = " << _id << ")" << endl;
   // search table
   for (int i = 0; i < length; i++) {
+    cout << "i = " << i << endl;
     Node* node = table[i];
     
     // get each node in linked list until either a NULL node is found or the student we're looking for
     while (node != NULL && node->student->id != _id) {
+      cout << "loop" << endl;
       //if (node == NULL) break;
       node = node->next;
     }
 
     // list did or didnt contain the student
     if (node != NULL && node->student->id == _id) return node;
-    else return NULL;
   }
 
   return NULL;
@@ -93,16 +101,6 @@ int HashTable::size() {
   }
        
   return size;
-}
-
-Node* HashTable::getNode(int hashID) {
-  Node* node = table[hashID];
-
-  // loop until the current node is null
-  while (node != NULL) {
-    node = node->next;
-  }
-  return node;
 }
 
 int HashTable::linkLength(int hashID) {

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <cstring>
 #include <vector>
@@ -11,6 +12,8 @@ void addStudent(HashTable* &table, char input[cssize]);
 void removeStudent(HashTable* &table, char input[cssize]);
 void printStudent(HashTable* &table, int id, bool userset);
 void help();
+
+Student* randomStudent();
 
 int main() {
   // both the class and the array of nodes within the class have the same name, i would change it but lazy
@@ -46,6 +49,35 @@ int main() {
 
   cout << "loop ended" << endl;
   return 0;
+}
+
+Student* randomStudents() {
+  vector<Student*> students;
+  Student* student;
+
+  ifstream file("Students.txt");
+  
+  // loop through students file
+  char line[128];
+  int var = 0;
+  while (file >> line)) {
+    // new student
+    if (line[0] == ' ') {
+      vector.push_back(student);
+
+      student = new Student();
+      var = 0;
+    }
+    // assign values to student
+    else {
+      if (var == 0) line >> student->id;
+      else if (var == 1) strcpy(student->firstname, line);
+      else if (var == 2) strcpy(student->lastname, line);
+      else if (var == 3) line >> student->gpa;
+    }
+  }
+
+  return rand(0, vector.size());
 }
 
 void addStudent(HashTable* &table, char input[cssize]) {
@@ -97,13 +129,11 @@ void printStudent(HashTable* &table, int id, bool userset) {
   if (userset == true) {
     // prompt for id
     char input[cssize];
-    cout << "id: "; cin >> input;
 
     // override id to new
     _id = atoi(input);
   }
 
-  cout << "DEBUG: " << _id << endl;
   // get the student
   Node* node = table->search(_id);
 
@@ -116,7 +146,7 @@ void printStudent(HashTable* &table, int id, bool userset) {
     cout << "- gpa: "       << setprecision(2) << fixed << student -> gpa << endl;
   }
   else {
-    cout << "printStudent() error" << endl;
+    cout << "student not found!" << endl;
   }
 }
 
